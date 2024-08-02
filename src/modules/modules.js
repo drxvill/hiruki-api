@@ -14,7 +14,7 @@ import {
 } from "../queries/queries.js";
 import { formatType, formatStatus, formatSeason } from "../utils/formater.js";
 import { getNextSeason } from "../utils/timing.js";
-import { getEpisodes, getSources } from "../utils/provider.js";
+import { getStreamingProviders, getEpisodes, getSources } from "../utils/provider.js";
 
 const getData = axios.create({
     baseURL: process.env.ANILIST_API_URL,
@@ -252,10 +252,10 @@ export const getAnimeInfo = async (id) => {
         year: response.data.Media.seasonYear,
         score: response.data.Media.averageScore ? `${response.data.Media.averageScore}%` : null,
         episodes: response.data.Media.episodes,
+        providers: await getStreamingProviders(id),
         description: response.data.Media.description,
         studio: response.data.Media.studios.nodes.length > 0 ? response.data.Media.studios.nodes[0].name : null,
         genres: response.data.Media.genres,
-        tags: response.data.Media.tags,
         characters
     }
 }
@@ -286,18 +286,18 @@ export const getAnimeRecommendations = async (id) => {
     return { recommendations }
 }
 
-export const getAnimeEpisodes = async (id) => {
-    return { episodes: await getEpisodes(id) }
+export const getAnimeEpisodes = async (id, provider) => {
+    return { provider, episodes: await getEpisodes(id, provider) }
 }
 
-export const getStreamSources = async (episodeid) => {
-    const data = await getSources(episodeid);
-    return { sources: data.sources }
+export const getStreamSources = async (episodeid, provider) => {
+    const data = await getSources(episodeid, provider);
+    return { provider, sources: data.sources }
 }
 
-export const getDownloadLink = async (episodeid) => {
-    const data = await getSources(episodeid);
-    return { link: data.download }
+export const getDownloadLink = async (episodeid, provider) => {
+    const data = await getSources(episodeid, provider);
+    return { provider, link: data.download }
 }
 
 export const getRandomID = async () => {

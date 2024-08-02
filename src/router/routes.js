@@ -140,8 +140,9 @@ router.get("/recommendations", async (request, response) => {
 router.get("/episodes", async (request, response) => {
     try {
         const id = request.query.id
+        const provider = request.query.provider || "gogoanime"
         if (id) {
-            response.status(200).json(await getAnimeEpisodes(id));
+            response.status(200).json(await getAnimeEpisodes(id, provider));
         } else {
             response.status(400).json({ message: "?id= query param is missing!" });
         }
@@ -154,8 +155,9 @@ router.get("/episodes", async (request, response) => {
 router.get("/stream", async (request, response) => {
     try {
         const episodeid = request.query.episodeid
+        const provider = request.query.provider || "gogoanime"
         if (episodeid) {
-            return response.status(200).json(await getStreamSources(episodeid));
+            return response.status(200).json(await getStreamSources(episodeid, provider));
         } else {
             response.status(400).json({ message: "?episodeid= query param is missing!" });
         }
@@ -168,8 +170,9 @@ router.get("/stream", async (request, response) => {
 router.get("/download", async (request, response) => {
     try {
         const episodeid = request.query.episodeid
+        const provider = request.query.provider || "gogoanime"
         if (episodeid) {
-            return response.status(200).json(await getDownloadLink(episodeid));
+            return response.status(200).json(await getDownloadLink(episodeid, provider));
         } else {
             response.status(400).json({ message: "?episodeid= query param is missing!" });
         }
