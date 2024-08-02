@@ -5,17 +5,10 @@ const gogoanime = new ANIME.Gogoanime();
 const anilist = new META.Anilist();
 
 const getGogoIdentifier = async (id) => {
-    const url = `https://raw.githubusercontent.com/drxvill/mal-backup/master/anilist/anime/${id}.json`;
+    const url = `https://raw.githubusercontent.com/drxvill/anilistsync/main/data/${id}.json`;
     const response = (await axios.get(url)).data;
-    if (response && response.Sites && response.Sites.Gogoanime) {
-        const gogoanime = response.Sites.Gogoanime
-        const result = Object.values(gogoanime)[0];
-        if (result) {
-            const identifier = result.identifier
-            return identifier
-        } else {
-            return null
-        }
+    if (response.mappings && response.mappings.gogoanime && response.mappings.gogoanime.length > 0) {
+        return response.mappings.gogoanime[0];
     } else {
         return null
     }
