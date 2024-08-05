@@ -4,6 +4,20 @@ import axios from "axios";
 const gogoanime = new ANIME.Gogoanime();
 const anilist = new META.Anilist();
 
+export const getIsDub = async (id) => {
+    const url = `https://raw.githubusercontent.com/drxvill/anilistsync/main/data/${id}.json`;
+    const response = (await axios.get(url)).data;
+    if (response.mappings && response.mappings.gogoanime && response.mappings.gogoanime.length > 0) {
+        if (response.mappings.gogoanime.length === 1) {
+            return false
+        } else if (response.mappings.gogoanime.length > 1) {
+            return true
+        }
+    } else {
+        return null
+    }
+}
+
 const getGogoIdentifier = async (id) => {
     const url = `https://raw.githubusercontent.com/drxvill/anilistsync/main/data/${id}.json`;
     const response = (await axios.get(url)).data;
