@@ -9,11 +9,8 @@ export const getIsDub = async (id) => {
         const url = `https://raw.githubusercontent.com/drxvill/anilistsync/main/data/${id}.json`;
         const response = (await axios.get(url)).data;
         if (response.mappings && response.mappings.gogoanime && response.mappings.gogoanime.length > 0) {
-            if (response.mappings.gogoanime.length === 1) {
-                return false
-            } else if (response.mappings.gogoanime.length > 1) {
-                return true
-            }
+            const hasDub = response.mappings.gogoanime.some(i => i.endsWith("-dub"));
+            return hasDub
         } else {
             return null
         }
