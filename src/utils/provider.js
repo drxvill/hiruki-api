@@ -4,13 +4,18 @@ import axios from "axios";
 const gogoanime = new ANIME.Gogoanime();
 const anilist = new META.Anilist();
 
-export const getIsDub = async (id) => {
+export const getIsSuborDub = async (id) => {
     try {
         const url = `https://raw.githubusercontent.com/drxvill/anilistsync/main/data/${id}.json`;
-        const response = (await axios.get(url)).data;
-        if (response.mappings && response.mappings.gogoanime && response.mappings.gogoanime.length > 0) {
-            const hasDub = response.mappings.gogoanime.some(i => i.endsWith("-dub"));
-            return hasDub
+        const response = await axios.get(url);
+        const data = response.data;
+        if (data && data.mappings && data.mappings.gogoanime) {
+            const gogoanime = data.mappings.gogoanime;
+            const dub = gogoanime.filter(s => s.endsWith("-dub"));
+            const count = dub.length;
+            if (count === 1 && gogoanime.length < 2) return "Dub Only"
+            if (count > 0 && gogoanime.length > 1) return "Sub & Dub"
+            if (gogoanime.length > 0) return "Sub Only"
         } else {
             return null
         }
