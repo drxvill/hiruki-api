@@ -251,7 +251,7 @@ export const getAnimeInfo = async (id) => {
         season: formatSeason(response.data.Media.season),
         year: response.data.Media.seasonYear,
         score: response.data.Media.averageScore ? `${response.data.Media.averageScore}%` : null,
-        dub: await getIsSuborDub(id),
+        type: await getIsSuborDub(id),
         episodes: response.data.Media.episodes,
         description: response.data.Media.description,
         studio: response.data.Media.studios.nodes.length > 0 ? response.data.Media.studios.nodes[0].name : null,
